@@ -1,0 +1,6 @@
+<html>
+<title>Here be dragons</title>
+<body>
+<h1>Here be dragons and not much else...</h1>
+</body>
+</head>

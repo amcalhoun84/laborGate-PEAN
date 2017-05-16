@@ -1,0 +1,30 @@
+{
+  "name": "laborgate-sql",
+  "version": "0.0.1",
+  "description": "pre-alpha lg",
+  "main": "./bin/www",
+  "dependencies": {
+    "angularjs": "^0.0.1",
+    "angular": "^1.6.4",
+    "body-parser": "^1.17.1",
+    "debug": "^2.6.6",
+    "bluebird": "^3.5.0",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.15.2",
+    "express-generator": "^4.15.0",
+    "morgan": "^1.8.1",
+    "http": "^0.0.0",
+    "pg-promise": "^5.6.8",
+    "path": "^0.12.7",
+    "pg": "^6.1.5",
+    "reactjs": "^1.0.0",
+    "session": "^0.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC"
+}

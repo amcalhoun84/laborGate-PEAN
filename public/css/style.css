@@ -1,0 +1,25 @@
+body { 
+	padding: 50px;
+	font: 14px "Lucinda Grande" Helvetica, Arial, sans-serif;
+ }
+
+
+ a { 
+ color: #0BF; 
+}
+
+ul { 
+	list-style-type: none;
+	padding-left: 10px;
+ }
+
+ .container { 
+ 	max-width: 400px;
+ 	background-color: #eee;
+ 	border: 1px solid black;
+ }
+
+ .header { 
+ 	text-align: center;
+
+ }

@@ -10,6 +10,10 @@ router.get('/api/users', db.getUsers);
 router.get('/api/groups', db.getGroups);
 router.get('/api/tasks', db.getTasks);
 
+router.get('/api/usertasks/', db.getUsersAndTasks);
+router.get('/api/usertasks/:name', db.getUsersAndTasksByName);
+router.get('/api/usertasksid/:id', db.getUsersAndTasksById);
+
 router.get('/api/users/:id', db.getUserById);
 router.get('/api/groups/:id', db.getGroupById);
 router.get('/api/tasks/:id', db.getTaskById);

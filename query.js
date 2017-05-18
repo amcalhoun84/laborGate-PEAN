@@ -8,9 +8,6 @@ var pg = require('pg');
 var pgp = require('pg-promise')(options);
 var connectionString = 'postgres://postgres:root@localhost:5432/laborGate';
 var db = pgp(connectionString);
-//console.log("Activating...");
-//console.log(database);
-///console.log(connectionString);
 
 // Query List
 
@@ -26,8 +23,9 @@ function getUsers(req, res, next) {
 		}
 
 		const query = client.query('SELECT * FROM users ORDER BY user_id ASC');
+		//const query = client.query('SELECT * FROM users INNER JOIN tasks ON users.user_name = tasks.assignedto ORDER BY user_id ASC');
 		query.on('row', (row) => { 
-			console.log("ROW: " + row.user_id + " " + row.user_name);
+			console.log("ROW: " + row.user_id + " " + row.user_name + row.task_name);
 			results.push(row);
 		});
 
@@ -150,6 +148,102 @@ function getTasks(req, res, next) {
 	});
 };
 
+// Get by specific circumstances
+
+function getUsersAndTasks(req, res, next) { 
+	console.log("Executing get users..");
+
+	const results = [];
+	pg.connect(connectionString, (err, client, done) => { 
+		if(err) { 
+			done();
+			console.log(err);
+			return res.status(500).json({success: false, data: err});
+		}
+
+		const query = client.query('SELECT * FROM users INNER JOIN tasks ON users.user_name = tasks.assignedto ORDER BY user_name ASC');
+		query.on('row', (row) => { 
+			console.log("ROW: " + row.user_id + " " + row.user_name + row.name);
+			results.push(row);
+		});
+
+		query.on('end', () => { 
+			
+			// console.log(res.json(results));
+			console.log("All tasks returned");
+			console.log(results);
+			//console.log(results);
+			done();
+			return res.json(results);
+		});
+	});
+};
+
+
+function getUsersAndTasksById(req, res, next) { 
+	console.log("Executing getting tasks by id associated to users..");
+
+	var id = parseInt(req.params.id);
+	console.log("ID: " + id);
+	const results = [];
+	pg.connect(connectionString, (err, client, done) => { 
+		if(err) { 
+			done();
+			console.log(err);
+			return res.status(500).json({success: false, data: err});
+		}
+
+		const query = client.query('SELECT * FROM users INNER JOIN tasks ON users.user_name = tasks.assignedto WHERE tasks.task_id=$1', [id]);
+		query.on('row', (row) => { 
+			console.log("ROW: " + row.user_id + " " + row.user_name + row.name);
+			results.push(row);
+		});
+
+		query.on('end', () => { 
+			
+			// console.log(res.json(results));
+			console.log("All tasks returned");
+			console.log(results);
+			//console.log(results);
+			done();
+			return res.json(results);
+		});
+	});
+};
+
+function getUsersAndTasksByName(req, res, next) { 
+	console.log("Executing get users..");
+
+	var name = req.params.name;
+	console.log(name);
+	const results = [];
+	pg.connect(connectionString, (err, client, done) => { 
+		if(err) { 
+			done();
+			console.log(err);
+			return res.status(500).json({success: false, data: err});
+		}
+
+		const query = client.query('SELECT * FROM users INNER JOIN tasks ON users.user_name = tasks.assignedto WHERE user_name=$1', [name]);
+		query.on('row', (row) => { 
+			console.log("ROW: " + row.user_id + " " + row.user_name + row.task_name);
+			results.push(row);
+		});
+
+		query.on('end', () => { 
+			
+			// console.log(res.json(results));
+			console.log("All tasks returned");
+			console.log(results);
+			//console.log(results);
+			done();
+			return res.json(results);
+		});
+	});
+
+};
+
+
 // get by ids
 
 function getUserById(req, res, next) { 
@@ -207,7 +301,10 @@ function getGroupById(req, res, next) {
 function createUser(req, res, next) { 
 	
 	const results = []
-	const data = { text: req.body.text };
+	const data = { text: req.body.text,
+				   email: req.body.email,
+				   password: req.body.password,
+				   type: req.body.type };
 	console.log(data);
 	pg.connect(connectionString, (err, client, done) => {
 
@@ -217,18 +314,18 @@ function createUser(req, res, next) {
 			return res.status(500).json({success: false, data: err});
 		}
 
-		client.query('INSERT INTO users(user_name, email, password, type) VALUES($1, \'test@testing.com\', \'(none)\', \'Regular\')', 
-			[data.text]);
-		const query = client.query('SELECT * FROM users ORDER by user_id ASC');
+		client.query('INSERT INTO users(user_name, email, password, type) VALUES($1, $2, $3, $4)', 
+			[data.text, data.email, data.password, data.type]);
+		//const query = client.query('SELECT * FROM users ORDER by user_id ASC');
 
-		query.on('row', (row) => { 
-			results.push(row);
-		});
+		//query.on('row', (row) => { 
+		//	results.push(row);
+		//});
 
-		query.on('end', () => { 
-			done();
-			return res.json(results);
-		});
+		//query.on('end', () => { 
+		//	done();
+		//	return res.json(results);
+		//});
 
 	});
 
@@ -250,8 +347,15 @@ function createUser(req, res, next) {
 
 function createTask(req, res, next) { 
 	const results = []
-	const data = { text: req.body.text };
+	const data = { text: req.body.text,
+				   urgency: req.body.urgency, 
+				   assignTo: req.body.assignTo,
+				   description: req.body.description, 
+				   date: req.body.date
+				};
 	pg.connect(connectionString, (err, client, done) => {
+
+	console.log(data);
 
 		if(err) { 
 			done();
@@ -259,11 +363,14 @@ function createTask(req, res, next) {
 			return res.status(500).json({success: false, data: err});
 		}
 
-		client.query('INSERT INTO tasks(name, urgency) VALUES($1, \'Low\')', 
-			[data.text]);
-		const query = client.query('SELECT * FROM tasks ORDER by task_id ASC');
+		// client.query('INSERT INTO tasks(name, urgency) VALUES($1, \'Low\')', 
+		//	[data.text]);
+		client.query('INSERT INTO tasks(name, urgency, description, due_date, assignedto, complete, overdue) VALUES($1, $2, $3, $4, $5, false, false)', 
+			[data.text, data.urgency, data.description, data.date, data.assignTo]);
+		
+		// const query = client.query('SELECT * FROM tasks ORDER by task_id ASC');
 
-		query.on('row', (row) => { 
+		/*query.on('row', (row) => { 
 			results.push(row);
 		});
 
@@ -271,7 +378,7 @@ function createTask(req, res, next) {
 			done();
 			return res.json(results);
 		});
-
+*/
 	});
 
 	// Move to Master Commands...
@@ -522,6 +629,12 @@ module.exports = {
 	getUsers: getUsers,
 	getTasks: getTasks,
 	getGroups: getGroups,
+
+	// Cross Reference Gets
+
+	getUsersAndTasks: getUsersAndTasks,
+	getUsersAndTasksByName: getUsersAndTasksByName,
+	getUsersAndTasksById: getUsersAndTasksById,
 	
 	// Individual-Gets
 	getUserById: getUserById,

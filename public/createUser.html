@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title> LaborGate </title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" media="screen">
+		<link rel="stylesheet" href="/css/style.css" media="screen">
+    <link rel="stylesheet" href="/css/angular-datepicker.css" media="screen">
+	</head>
+   <!-- <div ng-view></div> -->    
+
+    <body ng-app="testApp" ng-controller="myCtrl">
+    <div>
+    <div style="text-align: center;"> 
+        <a href="/createTask.html">Create Task</a> | <a href="/">TASKS</a> | <a href="/users.html">USERS</a> | <a href="/groups.html"> GROUPS </a>
+        </div>
+    </div>
+		<div class="container">
+			<div class="header">
+				<h1> Create User </h1>
+				<hr>
+
+				<h1 class="lead">Node + Express + Angular + PGSQL</h1>
+			</div>
+			      <div class="task-form">
+        <form>
+          <div ng-init="getUsers()">
+            <div class="form-group">
+          
+              <h4>User Name</h4>
+              <input type="text" class="form-control input-lg" placeholder="Enter user name..." ng-model="formData.text" required>
+              <hr>
+              <h4>Email</h4>
+              <input type="text" class="form-control input-lg" placeholder="Enter email..." ng-model="formData.email" required>
+              <hr>
+              <h4>Password</h4>
+              <input type="text" class="form-control input-lg" placeholder="Enter email..." ng-model="formData.password" required>
+              <hr>
+              <h4>Type of User</h4> 
+              <select ng-model="formData.type" ng-options="x for x in type"></select>
+              <br /><hr>
+              <hr>
+          </div>
+          <button type="submit" class="btn btn-primary btn-lg btn-block" ng-click="createUser()">Create User</button>
+        </form>
+      </div>
+      <br>
+    </div>
+    </div>
+    <script src="//code.jquery.com/jquery-2.2.4.min.js" type="text/javascript"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
+    <!--<script src="/js/angular-datepicker.js"></script>-->
+    <script src="js/app.js"></script>
+     <script>
+      angular.module('testApp', [])
+      .controller('myCtrl', function($scope, $http) { 
+        $scope.type = ["admin", "editor", "contributor", "viewer", "restricted"];
+        //$scope.assignTo = ["Andrew", "Jackie", "Karl"];
+        $scope.createUser = () => {
+        console.log($scope.formData);
+        $http.post('/api/users', $scope.formData)
+        .success((data) => { 
+          $scope.formData = {};
+          $scope.userData = data;
+          console.log(data);
+          })
+        .error((error) => { 
+         console.log("Error: " + error);
+       });
+      };
+      });
+      </script>
+  <!--  <script src="js/controller/task.controller.js"></script> -->
+  </body>
+</html>

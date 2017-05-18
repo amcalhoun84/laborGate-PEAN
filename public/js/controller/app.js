@@ -2,11 +2,11 @@ angular.module('laborGate', [])
 .controller('appController', ($scope, $http) => { 
 	
 
-	$scope.getTasks = () => { 
+	$scope.getUsersAndTasks = () => { 
 		console.log("Controller fired!")
 		$scope.formData = {};
 		$scope.taskData = {};
-		$http.get('/api/tasks')
+		$http.get('/api/usertasks/')
 		.success((data) => { 
 			$scope.taskData = data;
 			console.log(data);
@@ -15,6 +15,14 @@ angular.module('laborGate', [])
 			console.log('Error: ' + error);
 		});
 	};
+
+	$scope.getUserAndTasksByName = (userName) => { 
+		console.log("Searching for tasks by name!")
+		$scope.formData = {};
+		$scope.taskData = {};
+		$http.get('/api/usertasks/' + userName)
+
+	}
 
 	$scope.getUsers = () => {
 		console.log("Controller fired!")

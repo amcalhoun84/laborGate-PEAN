@@ -624,7 +624,30 @@ function deleteGroup(req, res, next) {
 	});
 }
 
+function authenticateUser(req, res, next) {
+	
+	const results = []
+	const data = { email: req.body.email,
+				   password: req.body.password
+				 }
+	
+	console.log(data);
+	pg.connect(connectionString, (err, client, done) => {
+
+		if(err) { 
+			done();
+			console.log(err);
+			return res.status(500).json({success: false, data: err}); 
+		}
+
+		client.query('SELECT users.user_name FROM users where users.email = $1 AND users.password = $2', 
+			[data.email, data.password]);
+	});
+
+}
+
 module.exports = {
+
 	// get-alls
 	getUsers: getUsers,
 	getTasks: getTasks,
@@ -658,4 +681,9 @@ module.exports = {
 	deleteUser: deleteUser,
 	deleteGroup: deleteGroup,
 	deleteTask: deleteTask
+
+	// authenticate:
+
+	authenticateUser: authenticateUser,
+
 };

@@ -33,9 +33,17 @@ router.post('/api/users/', db.createUser);
 router.post('/api/tasks/', db.createTask);
 router.post('/api/groups/', db.createGroup);
 
+// authentication
+
+router.post('/api/authenticate/', db.authenticateUser);
+
+// updates
+
 router.put('/api/users/:id', db.updateUser);
 router.put('/api/tasks/:id', db.updateTask);
 router.put('/api/groups/:id', db.updateGroup);
+
+// delete
 
 router.delete('/api/users/:id', db.deleteUser);
 router.delete('/api/tasks/:id', db.deleteTask);

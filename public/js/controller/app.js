@@ -1,3 +1,6 @@
+// Best Practices normally have you sepearating the various services and controllers; however, this applicaiton 
+// should be simple enough that everything, if well documented can be kept in a single app.js controller file.
+
 angular.module('laborGate', ['ngRoute', '720kb.datepicker'])
 	.config(function($routeProvider, $locationProvider) { 
 	$routeProvider
@@ -32,6 +35,146 @@ angular.module('laborGate', ['ngRoute', '720kb.datepicker'])
 	})
 })
 
+// Application Factories
+
+	.factory(function($http, $cookies, $rootScope, $timeout) {
+	// AuthenticationService.$inject = ['$http', '$cookies', '$rootScope', '$timeout'];
+	// function AuthenticationService($http, $cookies, $rootScope, $timeout) {
+		var service = {};
+
+		service.Login = Login;
+		service.SetCredentials = SetCredentials;
+		service.ClearCredentials = ClearCredentials;
+		
+		return service;
+
+		// In transition from mongoDB (BLECH!!!!) to postgreSQL, there might be no need for a callback.
+		function Login(email, password, callback) { 
+
+			console.log("Email: " + email + "\nPassword: " + password);
+
+			$http.post('/api/authenticate/', { email: email, password: password })
+			.then(function (response) { 
+				callback(response);
+				$rootScope.user = response.data[0];
+			});
+
+		}
+
+		function SetCredentials(email, password, user_name) {
+
+			var authdata = Base64.encode(email + ':' + password);
+
+			$rootScope.globals = { 
+				currentUser: { 
+					user_name: user_name,
+					email: email,
+					password: password
+				}
+			};
+
+			$http.defaults.headers.common['Authorization'] = 'Basic ' + authdata;
+
+			var cookieExp = new Date();
+
+			cookieExp.setDate(cookieExp.getDate() + 3);
+			console.log("Expiration date: " + cookieExp);
+			$cookies.putObject('globals', $rootScope.globals, { expires: cookieExp });
+		}
+
+		function ClearCredentials() { 
+
+			$rootScope.globals = {};
+			$cookies.remove('globals');
+			$http.defaults.headers.common.Authorization = 'basic';
+		}
+
+	
+
+		var Base64 = { 
+
+			keyStr: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=',
+
+			encode: function(input) { 
+				console.log("Beginning encoding...");
+				var output = "";
+				var chr1, chr2, chr3 = "";
+				var enc1, enc2, enc3, enc4 = "";
+				var i = 0;
+				console.log("Input length: " + input.length);
+
+				do { 
+					// console.log("Loop run: " + i);
+					chr1 = input.charCodeAt(i++);
+					chr2 = input.charCodeAt(i++);
+					chr3 = input.charCodeAt(i++);
+
+					enc1 = chr1 >> 2;
+					enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+					enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+					enc4 = chr4 & 63;
+
+					if(isNaN(chr2)) { 
+						enc3 = enc2 = 64;
+					} else if (isNaN(chr3)) { 
+						enc4 = 64;
+					}
+
+					output = output +
+						this.keyStr.charAt(enc1) +
+						this.keyStr.charAt(enc2) + 
+						this.keyStr.charAt(enc3) +
+						this.keyStr.charAt(enc4);
+					chr1 = chr2 = chr3 = "";
+					enc1 = enc2 = enc3 = enc4 = "";
+				}  while(i < input.length);
+
+				console.log("AuthData Output: " + output);
+
+				return output;
+			},
+
+			decode: function(input) { 
+				var output = "";
+				var chr1, chr2, chr3 = "";
+				var enc1, enc2, enc3, enc4 = "";
+				var i = 0;
+
+				var base64test = /[^A-Za-z0-9\+\/\=]/g;
+				if(base64test.exec(input)) { 
+					window.alert("There is an invalid BASE64 INPUT found. Expect decoding errors...");
+				}
+				input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+
+				do { 
+					enc1 = this.keyStr.indexOf(input.charAt(i++));
+					enc2 = this.keyStr.indexOf(input.charAt(i++));
+					enc3 = this.keyStr.indexOf(input.charAt(i++));
+					enc4 = this.keyStr.indexOf(input.charAt(i++));
+
+					chr1 = (enc3 << 2) | (enc2 >> 4);
+					chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+					chr3 = ((enc3 & 3) << 6) | enc4;
+
+					output += String.fromCharCode(chr1);
+
+					if(enc3 != 64) { 
+						output += String.fromCharCode(chr2);
+					}
+					if(enc4 != 64) { 
+						output += String.fromCharCode(chr3);
+					}
+
+					chr1 = chr2 = chr3 = "";
+					enc1 = enc2 = enc3 = enc4 = "";
+
+				} while(i < input.length);
+			return output;
+		}
+	}
+})
+
+
 .controller('appController', ($scope, $http) => { 
 	
 	// CreateTask key-value pairs and ng-option/repeat:
@@ -48,8 +191,6 @@ angular.module('laborGate', ['ngRoute', '720kb.datepicker'])
     // This will eventually change to be pulled directly from the Users table within the database. 
 
     $scope.assignTo = ["Andrew", "Jackie", "Karl"];
-
-
 
 	// CREATEUSER key-value pairs: -- the level of the user, once integrated will affect what they are able to do.
 	$scope.type = [
@@ -231,5 +372,21 @@ angular.module('laborGate', ['ngRoute', '720kb.datepicker'])
 		.error((error) => { 
 			console.log("Error: " + error);
 		});
+	};
+
+
+	// Authentication Checks
+
+	$scope.authenticateUser = (username, password) => { 
+		$http.put('/api/authenticate/' + username + '/' + password)
+		.success((data) => { 
+			$scope.formData = {}
+			$scope.loginData = data;
+		})
+		.error((error) => { 
+			console.log("Error: " + error);
+
+		});
+
 	};
 });

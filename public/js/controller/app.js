@@ -33,6 +33,10 @@ angular.module('laborGate', ['ngRoute', '720kb.datepicker'])
 	.when('/updateGroup', { 
 		template: "<h3 style='text-align: center'> Nothing here yet, please check back later. </h3>"
 	})
+	// this is temporary, will become the default when user is not logged in. Testing purposes.
+	.when('/login', { 
+		templateUrl: '/view/login.view.html'
+	})
 })
 
 // Application Factories
@@ -205,7 +209,11 @@ angular.module('laborGate', ['ngRoute', '720kb.datepicker'])
 	// feeds it into a JSON format for the postgreSQL database -- refer to ./query.js and ./routes.js
 	// for reference.
 
-	$scope.getUsersAndTasks = () => { 
+
+// Future Features, were interfering with basic features during regression, may ultimately be unecessary until
+// 1 to M.
+
+/*	$scope.getUsersAndTasks = () => { 
 		console.log("Controller fired!")
 		$scope.formData = {};
 		$scope.taskData = {};
@@ -224,6 +232,21 @@ angular.module('laborGate', ['ngRoute', '720kb.datepicker'])
 		$scope.formData = {};
 		$scope.taskData = {};
 		$http.get('/api/usertasks/' + userName)
+		.success((data) => { 
+			$scope.taskData = data;
+			console.log(data);
+		})
+		.error((error) => { 
+			console.log('Error: ' + error);
+		});
+	};
+*/
+
+	$scope.getTasks = () => {
+		console.log("Controller fired!")
+		$scope.formData = {};
+		$scope.taskData = {};
+		$http.get('/api/tasks')
 		.success((data) => { 
 			$scope.taskData = data;
 			console.log(data);
@@ -377,10 +400,11 @@ angular.module('laborGate', ['ngRoute', '720kb.datepicker'])
 
 	// Authentication Checks
 
-	$scope.authenticateUser = (username, password) => { 
-		$http.put('/api/authenticate/' + username + '/' + password)
+	$scope.authenticateUser = () => { 
+		console.log($scope.loginInfo);
+		$http.post('/api/authenticate/', $scope.loginInfo)
 		.success((data) => { 
-			$scope.formData = {}
+			$scope.loginInfo = {};
 			$scope.loginData = data;
 		})
 		.error((error) => { 

@@ -36,6 +36,7 @@ router.post('/api/groups/', db.createGroup);
 // authentication
 
 router.post('/api/authenticate/', db.authenticateUser);
+router.post('/api/authenticate/:email/:password', db.authenticateUserByParams);
 
 // updates
 

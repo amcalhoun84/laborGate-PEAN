@@ -311,7 +311,7 @@ function createUser(req, res, next) {
 		if(err) { 
 			done();
 			console.log(err);
-			return res.status(500).json({success: false, data: err});
+			return res.status(500).json({success: false, data: err}); 
 		}
 
 		client.query('INSERT INTO users(user_name, email, password, type) VALUES($1, $2, $3, $4)', 

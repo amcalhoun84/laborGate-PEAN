@@ -1,0 +1,63 @@
+		<div class="container">
+			<div class="header">
+				<h1> Create User </h1>
+				<hr>
+
+				<h1 class="lead">Node + Express + Angular + PGSQL</h1>
+			</div>
+			      <div class="task-form">
+        <form>
+          <div ng-init="getUsers()">
+            <div class="form-group">
+          
+              <h4>User Name</h4>
+              <input type="text" class="form-control input-lg" placeholder="Enter user name..." ng-model="formData.text" required>
+              <hr>
+              <h4>Email</h4>
+              <input type="text" class="form-control input-lg" placeholder="Enter email..." ng-model="formData.email" required>
+              <hr>
+              <h4>Password</h4>
+              <input type="text" class="form-control input-lg" placeholder="Enter email..." ng-model="formData.password" required>
+              <hr>
+              <h4>Type of User</h4> 
+              <select ng-model="formData.type" ng-options="x.value for x in type" value="{{x.key}}"></select>
+              <br /><hr>
+              <hr>
+          </div>
+          <button type="submit" class="btn btn-primary btn-lg btn-block" ng-click="createUser()">Create User</button>
+        </form>
+      </div>
+      <br>
+    </div>
+    </div>
+    <script src="//code.jquery.com/jquery-2.2.4.min.js" type="text/javascript"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
+    <!--<script src="/js/angular-datepicker.js"></script>-->
+    <!--<script src="js/app.js"></script>-->
+     <!-- <script>
+      angular.module('testApp', [])
+      .controller('myCtrl', function($scope, $http) { 
+        $scope.type = [
+        { key: 0, value: "Admin" }, 
+        { key: 1, value: "Editor" }, 
+        { key: 2, value: "Contributor" }, 
+        { key: 3, value: "Viewer" },
+        { key: 4, value: "Restricted" }
+
+        ];
+
+        $scope.createUser = () => {
+        console.log($scope.formData);
+        $http.post('/api/users', $scope.formData)
+        .success((data) => { 
+          $scope.formData = {};
+          $scope.userData = data;
+          console.log(data);
+          })
+        .error((error) => { 
+         console.log("Error: " + error);
+       });
+      };
+      });
+      </script> -->

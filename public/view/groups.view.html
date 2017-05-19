@@ -1,0 +1,25 @@
+<div class="container">
+			<div class="header">
+				<h1> LaborGate Tasks </h1>
+				<hr>
+
+				<h1 class="lead">Node + Express + Angular + PGSQL</h1>
+			</div>
+			      <div class="task-form">
+        <form>
+          <div ng-init="getGroups()">
+            <div class="form-group">
+          
+              <input type="text" class="form-control input-lg" placeholder="Enter text..." ng-model="formData.text" required>
+          </div>
+          <button type="submit" class="btn btn-primary btn-lg btn-block" ng-click="createGroup()">Add Groups</button>
+        </form>
+      </div>
+      <br>
+      <div class="task-list">
+        <ul ng-repeat="group in groupData">
+          <li><p><input class="lead" type="checkbox" ng-click="deleteGroud(group.task_id)">&nbsp; {{ group.group_id }} - {{ group.name }}
+          </p></li>
+        </ul>
+      </div>
+    </div>

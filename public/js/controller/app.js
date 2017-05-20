@@ -53,6 +53,7 @@ angular.module('laborGate', ['ngRoute', '720kb.datepicker'])
 		return service;
 
 		// In transition from mongoDB (BLECH!!!!) to postgreSQL, there might be no need for a callback.
+		// This is NOT implemented yet until we are absolutely sure that authentication actually works properly.
 		function Login(email, password, callback) { 
 
 			console.log("Email: " + email + "\nPassword: " + password);
@@ -401,10 +402,10 @@ angular.module('laborGate', ['ngRoute', '720kb.datepicker'])
 	// Authentication Checks
 
 	$scope.authenticateUser = () => { 
-		console.log($scope.loginInfo);
-		$http.post('/api/authenticate/', $scope.loginInfo)
+		console.log("Scope Info:" + $scope.formData);
+		$http.post('/api/authenticate/', $scope.formData)
 		.success((data) => { 
-			$scope.loginInfo = {};
+			$scope.formData = {};
 			$scope.loginData = data;
 		})
 		.error((error) => { 

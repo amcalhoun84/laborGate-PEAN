@@ -40,38 +40,10 @@ function getUsers(req, res, next) {
 		});
 	});
 
-/*
-	db.any('select * from users')
-	 .then(function(data) { 
-  	  res.status(200)
-	    .json({
-			status: 'success',
-			data: data,
-			message: 'Retrieved all users'
-		});
-	})
-	.catch(function(err) { 
-		return next(err);
-	});
-*/
-
 };
 
 function getGroups(req, res, next) { 
 
-/*	db.any('select * from groups')
-	 .then(function(data) { 
-  	  res.status(200)
-	    .json({
-			status: 'success',
-			data: data,
-			message: 'Retrieved all groups'
-		});
-	})
-	.catch(function(err) { 
-		return next(err);
-	});
-};*/
 
 	console.log("Executing get groups..");
 
@@ -104,23 +76,6 @@ function getGroups(req, res, next) {
 
 function getTasks(req, res, next) { 
 	console.log("Executing get tasks..");
-
-	/*
-	// This is for PURE BACK END -- integrating attempt at angular-js compatible usage below...
-	//db.any('select * from tasks')
-	db.any('select * from tasktest')
-	 .then(function(data) { 
-  	  res.status(200)
-	    .json({
-			status: 'success',
-			data: data,
-			message: 'Retrieved all tasks'
-		});
-	})
-	.catch(function(err) { 
-		return next(err);
-	}); */
-
 
 	const results = [];
 	pg.connect(connectionString, (err, client, done) => { 
@@ -511,7 +466,7 @@ function authenticateUser(req, res, next) {
 				   password: req.body.password
 				 }
 	
-	console.log(data);
+	console.log("Back end data transfer:\nEmail: " + data.email + "\nPassword: " + data.password );
 	pg.connect(connectionString, (err, client, done) => {
 
 		if(err) { 

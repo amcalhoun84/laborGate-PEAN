@@ -1,0 +1,36 @@
+<div class="container">
+			<div class="header">
+				<h1> LaborGate Users </h1>
+				<hr>
+
+				<!-- <h1 class="lead">Node + Express + Angular + PGSQL</h1> -->
+			</div>
+			      <div class="task-form">
+         <div class="form-group">
+        <form>
+          <div ng-init="getUsers()">
+           <h4>User Name</h4>
+              <input type="text" class="form-control input-lg" placeholder="Enter user name..." ng-model="formData.userName" required>
+              <hr>
+               <h4>Email</h4>
+              <input type="text" class="form-control input-lg" placeholder="Enter email..." ng-model="formData.email" required>
+              <hr>
+              <h4>Password</h4>
+              <input type="text" class="form-control input-lg" placeholder="Enter password..." ng-model="formData.password" required>
+              <hr>
+              <h4>Type of User</h4> 
+              <select ng-model="formData.type" ng-options="x.value for x in type" value="{{x.value}}"></select>
+              <br /><hr>
+               <button type="submit" class="btn btn-primary btn-lg btn-block" ng-click="createTestUser()">Create User</button>
+           
+        </form>
+      </div> 
+      <br>
+      <div class="task-list">
+        <ul ng-repeat="user in userData">
+          <li><p><input class="lead" type="checkbox" ng-click="deleteUser(user.user_id)">&nbsp; {{ user.user_id }} - {{ user.user_name }}
+          </p></li>
+        </ul>
+      </div>
+    </div>
+    </div>

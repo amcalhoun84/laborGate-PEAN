@@ -1,0 +1,36 @@
+ </div>
+		<div class="container">
+			<div class="header">
+				<h1> Create Task </h1>
+				<hr>
+
+				<h1 class="lead">Node + Express + Angular + PGSQL</h1>
+			</div>
+			      <div class="task-form" ng-init="getTasks()">
+        <form>
+            <div class="form-group">
+          
+              <h4>Task Name</h4>
+              <input type="text" class="form-control input-lg" placeholder="Enter task name..." ng-model="formData.taskName" required>
+              <hr>
+              <h4>Urgency</h4> 
+              <select ng-model="formData.taskUrgency" ng-options="x.value for x in urgency" value="{{x.key}}"></select>
+              <br /><hr>
+              <h4>Assign To:</h4>
+              <select ng-model="formData.assignTo" ng-options="x for x in assignTo"></select>
+              <hr>
+              <h4>Description of Task</h4>
+              <textarea rows="5" columns="25" ng-model="formData.taskDescription" placeholder="Input notes about task here."></textarea>
+              <h4>Due date</h4>
+              <datepicker date-format="yyyy-MM-dd">
+                <input ng-model="formData.date" type="text" />
+              </datepicker>
+              <hr>
+          </div>
+          <button type="submit" class="btn btn-primary btn-lg btn-block" ng-click="createTask()">Add Task</button>
+        </form>
+      </div>
+      <br>
+    </div>
+    </div>
+    

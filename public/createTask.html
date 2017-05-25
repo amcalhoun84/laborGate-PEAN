@@ -6,6 +6,10 @@
 		<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" media="screen">
 		<link rel="stylesheet" href="/css/style.css" media="screen">
     <link rel="stylesheet" href="/css/angular-datepicker.css" media="screen">
+     <script src="//code.jquery.com/jquery-2.2.4.min.js" type="text/javascript"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" type="text/javascript"></script>
+    
+  <!--  <script src="js/controller/task.controller.js"></script> -->
 	</head>
    <!-- <div ng-view></div> -->    
 
@@ -14,66 +18,7 @@
     <div style="text-align: center;"> 
         <a href="/createTask.html">Create Task</a> | <a href="/">TASKS</a> | <a href="/users.html">USERS</a> | <a href="/groups.html"> GROUPS </a>
         </div>
-    </div>
-		<div class="container">
-			<div class="header">
-				<h1> Create Task </h1>
-				<hr>
-
-				<h1 class="lead">Node + Express + Angular + PGSQL</h1>
-			</div>
-			      <div class="task-form">
-        <form>
-          <div ng-init="getTasks()">
-            <div class="form-group">
-          
-              <h4>Task Name</h4>
-              <input type="text" class="form-control input-lg" placeholder="Enter task name..." ng-model="formData.text" required>
-              <hr>
-              <h4>Urgency</h4> 
-              <select ng-model="formData.urgency" ng-options="x for x in urgency"></select>
-              <br /><hr>
-              <h4>Assign To:</h4>
-              <select ng-model="formData.assignTo" ng-options="x for x in assignTo"></select>
-              <hr>
-              <h4>Description of Task</h4>
-              <textarea rows="5" columns="25" ng-model="formData.description" placeholder="Input notes about task here."></textarea>
-              <h4>Due date</h4>
-              <datepicker date-format="yyyy-MM-dd">
-                <input ng-model="formData.date" type="text" />
-              </datepicker>
-              <hr>
-          </div>
-          <button type="submit" class="btn btn-primary btn-lg btn-block" ng-click="createTask()">Add Task</button>
-        </form>
-      </div>
-      <br>
-    </div>
-    </div>
-    <script src="//code.jquery.com/jquery-2.2.4.min.js" type="text/javascript"></script>
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" type="text/javascript"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
-    <script src="/js/angular-datepicker.js"></script>
-    <script src="js/app.js"></script>
-     <script>
-      angular.module('testApp', ['720kb.datepicker'])
-      .controller('myCtrl', function($scope, $http) { 
-        $scope.urgency = ["Low", "Medium", "High", "Urgency", "Immediately"];
-        $scope.assignTo = ["Andrew", "Jackie", "Karl"];
-        $scope.createTask = () => {
-        console.log($scope.formData);
-        $http.post('/api/tasks', $scope.formData)
-        .success((data) => { 
-          $scope.formData = {};
-          $scope.taskData = data;
-          console.log(data);
-          })
-        .error((error) => { 
-         console.log("Error: " + error);
-       });
-      };
-      });
-      </script>
-  <!--  <script src="js/controller/task.controller.js"></script> -->
+   
+   
   </body>
 </html>

@@ -1,0 +1,25 @@
+		<div class="container">
+			<div class="header">
+				<h1> Login User </h1>
+				<hr>
+
+	   		</div>
+			      <div class="task-form">
+        <form>
+          <div ng-init="getUsers()">
+             <div class="form-group">
+          
+              <h4>Email</h4>
+              <input type="email" class="form-control input-lg" placeholder="Enter email..." ng-model="formData.email" required>
+              <hr>
+              <h4>Password</h4>
+              <input type="password" class="form-control input-lg" placeholder="Enter password..." ng-model="formData.password" required>
+              <hr>
+          </div>
+          <button type="submit" class="btn btn-primary btn-lg btn-block" ng-click="authenticateUser()">Log In</button>
+        </form>
+      </div>
+      <br>
+    </div>
+    </div>
+  

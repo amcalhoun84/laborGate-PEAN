@@ -14,20 +14,43 @@ router.get('/api/usertasks/', db.getUsersAndTasks);
 router.get('/api/usertasks/:name', db.getUsersAndTasksByName);
 router.get('/api/usertasksid/:id', db.getUsersAndTasksById);
 
+// future hooks
+/*
+
+router.get('/api/usergroups/', db.getUserGroups);
+router.get('/api/usergroups/:name', getGroupsByUserName);
+router.get('/api/groupusers/', getUsersInGroup);
+
+*/
+
 router.get('/api/users/:id', db.getUserById);
 router.get('/api/groups/:id', db.getGroupById);
 router.get('/api/tasks/:id', db.getTaskById);
 
-router.post('/api/users/', db.createUser);
+
+router.post('/api/users/', db.createUser); 
 router.post('/api/tasks/', db.createTask);
 router.post('/api/groups/', db.createGroup);
+
+// authentication
+
+router.post('/api/authenticate/', db.authenticateUser);
+router.post('/api/authenticate/:email/:password', db.authenticateUserByParams);
+
+// updates
 
 router.put('/api/users/:id', db.updateUser);
 router.put('/api/tasks/:id', db.updateTask);
 router.put('/api/groups/:id', db.updateGroup);
 
+// delete
+
 router.delete('/api/users/:id', db.deleteUser);
 router.delete('/api/tasks/:id', db.deleteTask);
 router.delete('/api/groups/:id', db.deleteGroup);
+
+// testing
+router.post('/api/usertest/', db.createTestUser);
+
 
 module.exports = router;

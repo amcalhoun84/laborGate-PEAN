@@ -40,38 +40,10 @@ function getUsers(req, res, next) {
 		});
 	});
 
-/*
-	db.any('select * from users')
-	 .then(function(data) { 
-  	  res.status(200)
-	    .json({
-			status: 'success',
-			data: data,
-			message: 'Retrieved all users'
-		});
-	})
-	.catch(function(err) { 
-		return next(err);
-	});
-*/
-
 };
 
 function getGroups(req, res, next) { 
 
-/*	db.any('select * from groups')
-	 .then(function(data) { 
-  	  res.status(200)
-	    .json({
-			status: 'success',
-			data: data,
-			message: 'Retrieved all groups'
-		});
-	})
-	.catch(function(err) { 
-		return next(err);
-	});
-};*/
 
 	console.log("Executing get groups..");
 
@@ -104,23 +76,6 @@ function getGroups(req, res, next) {
 
 function getTasks(req, res, next) { 
 	console.log("Executing get tasks..");
-
-	/*
-	// This is for PURE BACK END -- integrating attempt at angular-js compatible usage below...
-	//db.any('select * from tasks')
-	db.any('select * from tasktest')
-	 .then(function(data) { 
-  	  res.status(200)
-	    .json({
-			status: 'success',
-			data: data,
-			message: 'Retrieved all tasks'
-		});
-	})
-	.catch(function(err) { 
-		return next(err);
-	}); */
-
 
 	const results = [];
 	pg.connect(connectionString, (err, client, done) => { 
@@ -296,12 +251,12 @@ function getGroupById(req, res, next) {
 
 // Creation Algorithms
 
-// I am keeping this as is, because user creation should ONLY be done outside of the app...
+// Testing Algorithm
 
-function createUser(req, res, next) { 
+function createTestUser(req, res, next) { 
 	
 	const results = []
-	const data = { text: req.body.text,
+	const data = { userName: req.body.userName,
 				   email: req.body.email,
 				   password: req.body.password,
 				   type: req.body.type };
@@ -311,46 +266,47 @@ function createUser(req, res, next) {
 		if(err) { 
 			done();
 			console.log(err);
-			return res.status(500).json({success: false, data: err});
+			return res.status(500).json({success: false, data: err}); 
+		}
+
+		client.query('INSERT INTO users(user_name, email, password, type) VALUES($1, $2, $3, $4)', 
+			[data.userName, data.email, data.password, data.type]);
+
+	});
+
+}
+
+// I am keeping this as is, because user creation should ONLY be done outside of the app...
+
+function createUser(req, res, next) { 
+	
+	const results = []
+	const data = { text: req.body.userName,
+				   email: req.body.email,
+				   password: req.body.password,
+				   type: req.body.type };
+	console.log(data);
+	pg.connect(connectionString, (err, client, done) => {
+
+		if(err) { 
+			done();
+			console.log(err);
+			return res.status(500).json({success: false, data: err}); 
 		}
 
 		client.query('INSERT INTO users(user_name, email, password, type) VALUES($1, $2, $3, $4)', 
 			[data.text, data.email, data.password, data.type]);
-		//const query = client.query('SELECT * FROM users ORDER by user_id ASC');
-
-		//query.on('row', (row) => { 
-		//	results.push(row);
-		//});
-
-		//query.on('end', () => { 
-		//	done();
-		//	return res.json(results);
-		//});
 
 	});
 
-	/*
-	db.none('insert into users(name, email, password, type)' + 'values(${name}, ${email}, ${password}, ${type})',
-		req.body)
-		.then(function() {
-			res.status(200)
-			.json({
-				status: 'success',
-				message: 'Created a new user.'
-			});
-		})
-		.catch(function (err) { 
-			return next(err);
-		});
-		*/
 }
 
 function createTask(req, res, next) { 
 	const results = []
-	const data = { text: req.body.text,
-				   urgency: req.body.urgency, 
+	const data = { text: req.body.taskName,
+				   urgency: req.body.taskUrgency, 
 				   assignTo: req.body.assignTo,
-				   description: req.body.description, 
+				   description: req.body.taskDescription, 
 				   date: req.body.date
 				};
 	pg.connect(connectionString, (err, client, done) => {
@@ -367,51 +323,16 @@ function createTask(req, res, next) {
 		//	[data.text]);
 		client.query('INSERT INTO tasks(name, urgency, description, due_date, assignedto, complete, overdue) VALUES($1, $2, $3, $4, $5, false, false)', 
 			[data.text, data.urgency, data.description, data.date, data.assignTo]);
-		
-		// const query = client.query('SELECT * FROM tasks ORDER by task_id ASC');
-
-		/*query.on('row', (row) => { 
-			results.push(row);
-		});
-
-		query.on('end', () => { 
-			done();
-			return res.json(results);
-		});
-*/
 	});
 
-	// Move to Master Commands...
-	/*db.none('insert into tasktest(task_name)' + 'values($1)',
-	//db.none('insert into tasks(name, description, urgency, duedate, complete, overdue, assignedtoid)' + 'values(${name}, ${description}, ${urgency}, ${duedate}, ${complete}, ${overdue}, ${assignedtoid})',
-		[req.body.text])
-		.then(function() {
-			res.status(200)
-			.json({
-				status: 'success',
-				message: 'Created a new task.'
-			});
-		})
-		.catch(function (err) { 
-			return next(err);
-		});
-	db.any('select * from tasktest ORDER by task_id ASC')
-	.then(function() { 
-		res.status(200)
-		.json({ 
-			status: 'success',
-			message: 'revealed all tasks'
-		});
-	})
-	.catch(function(err) { 
-		return next(err);
-	});*/
+
 };
 
 function createGroup(req, res, next) { 
 	
 	const results = []
-	const data = { text: req.body.text };
+	const data = { groupName: req.body.groupName };
+	console.log("Data: " + data.groupName);
 	pg.connect(connectionString, (err, client, done) => {
 
 		if(err) { 
@@ -421,7 +342,7 @@ function createGroup(req, res, next) {
 		}
 
 		client.query('INSERT INTO groups(name, type) VALUES($1, \'Testing\')', 
-			[data.text]);
+			[data.groupName]);
 		const query = client.query('SELECT * FROM groups ORDER by group_id ASC');
 
 		query.on('row', (row) => { 
@@ -435,18 +356,6 @@ function createGroup(req, res, next) {
 
 	});
 
-	/*db.none('insert into groups(name, type)' + 'values(${name}, ${type})', 
-		req.body)
-		.then(function() { 
-			res.status(200)
-			.json({
-				status: 'success',
-				message: 'Created a new group.'
-			});
-		})
-		.catch(function(err) { 
-			return next(err);
-		});*/
 };
 
 // Update Algorithms
@@ -499,20 +408,6 @@ function updateGroup(req, res, next) {
 }
 
 function deleteUser(req, res, next) { 
-	/*
-	var queryID = parseInt(req.params.id);
-	db.result('delete from users where id=$1', queryID)
-	.then(function(result) { 
-		res.status(200)
-		.json({
-			status: 'success',
-			message: 'Removed ${result.rowCount} user'
-		});
-	})
-	.catch(function(err) { 
-		return next(err);
-	});
-	*/
 
 	const results = [];
 	const id = req.params.id;
@@ -542,23 +437,6 @@ function deleteUser(req, res, next) {
 function deleteTask(req, res, next) { 
 	const results = [];
 	const id = req.params.id;
-
-	// Move to MASTER Controls Later.
-	/*console.log("Deleting a number...")
-	var queryID = req.params.id;
-	console.log(queryID);
-	db.result('delete from tasks where task_id=$1', [queryID])
-	.then(function(result) { 
-		res.status(200)
-		.json({
-			status: 'success',
-			message: 'Removed ${result.rowCount} task'
-		});
-	})
-	.catch(function(err) { 
-		return next(err);
-	});*/
-
 	pg.connect(connectionString, (err, client, done) => { 
 		if(err)
 		{
@@ -585,23 +463,6 @@ function deleteGroup(req, res, next) {
 	
 	const results = [];
 	const id = req.params.id;
-
-	/*
-	var queryID = parseInt(req.params.id);
-	console.log(queryID);
-	db.result('delete from groups where group_id=$1', queryID)
-	.then(function(result) { 
-		res.status(200)
-		.json({
-			status: 'success',
-			message: 'Removed ${result.rowCount} group'
-		});
-	})
-	.catch(function(err) { 
-		return next(err);
-	});
-	*/
-
 	pg.connect(connectionString, (err, client, done) => { 
 		if(err)
 		{
@@ -624,7 +485,82 @@ function deleteGroup(req, res, next) {
 	});
 }
 
+function authenticateUser(req, res, next) {
+	
+	const results = []
+	const data = { email: req.body.email,
+				   password: req.body.password
+				 }
+	
+	console.log("Back end data transfer:\nEmail: " + data.email + "\nPassword: " + data.password );
+	pg.connect(connectionString, (err, client, done) => {
+
+		if(err) { 
+			done();
+			console.log(err);
+			return res.status(500).json({success: false, data: err}); 
+		}
+
+		const query = client.query('SELECT users.user_name FROM users where users.email = $1 AND users.password = $2', 
+			[data.email, data.password]);
+				query.on('row', (row) => { 
+			console.log("ROW: " + row.user_name);
+			results.push(row);
+		});
+
+		query.on('end', () => { 
+			
+			// console.log(res.json(results));
+			console.log("All valid users returned");
+			console.log(results);
+			//console.log(results);
+			done();
+			return res.json(results);
+		});
+	});
+}
+
+// Back-end function to be used by the API only.
+
+function authenticateUserByParams(req, res, next) {
+	
+	const results = []
+	const data = { email: req.params.email,
+				   password: req.params.password
+				 }
+	
+	console.log(data);
+	pg.connect(connectionString, (err, client, done) => {
+
+		if(err) { 
+			done();
+			console.log(err);
+			return res.status(500).json({success: false, data: err}); 
+		}
+
+		const query = client.query('SELECT users.user_name FROM users where users.email = $1 AND users.password = $2', 
+			[data.email, data.password]);
+		query.on('row', (row) => { 
+			console.log("ROW: " + row.user_name);
+			results.push(row);
+		});
+
+		query.on('end', () => { 
+			
+			// console.log(res.json(results));
+			console.log("All tasks returned");
+			console.log(results);
+			//console.log(results);
+			done();
+			return res.json(results);
+		});
+	});
+	
+
+}
+
 module.exports = {
+
 	// get-alls
 	getUsers: getUsers,
 	getTasks: getTasks,
@@ -657,5 +593,12 @@ module.exports = {
 
 	deleteUser: deleteUser,
 	deleteGroup: deleteGroup,
-	deleteTask: deleteTask
+	deleteTask: deleteTask,
+
+	// authenticate:
+
+	authenticateUser: authenticateUser,
+	authenticateUserByParams: authenticateUserByParams,
+	createTestUser: createTestUser
+
 };

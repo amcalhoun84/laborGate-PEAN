@@ -1,0 +1,22 @@
+<div class="container">
+      <div class="header">
+        <h1> LaborGate Tasks</h1>
+        <hr>
+
+        <!-- <h1 class="lead">Node + Express + Angular + PGSQL</h1> -->
+      </div>
+            <div class="task-form">
+        <form>
+          <div ng-init="getTasks()">
+            <div class="form-group">
+        </form>
+      </div>
+      <br>
+      <div class="task-list">
+        <ul ng-repeat="task in taskData">
+          <li><p><input class="lead" type="checkbox" ng-click="deleteTask(task.task_id)">&nbsp; {{ task.task_id }} - {{ task.name }} - {{ task.assignedto }}
+          </p></li>
+        </ul>
+      </div>
+    </div>
+    </div>
